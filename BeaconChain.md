@@ -158,3 +158,61 @@ it can be confusing as first. but it is way simpler as showen below
                 - Smart contract changes
 ```
 
+
+# Committees
+
+A committees is a group of validators. for security each slot has commitees of 128 validators. in each slots the validator is selected randomly by RANDAO and shuffles validators to committees. it's possible a validator is proposer and committee member for the same slot, but it's not the norm. the probaility of this happening is 1/32 so we will see it about once per epoch. only the assigned committee is allowed to vote in current slot. 
+
+**why only assign committee can vote?**
+if there ishuge numbers of validators then each slot the huge number of votes will broadcasted. and it will explod the network. thats why we choose to only assign comitte can vote in a slot.
+
+# LMD Ghost = Ethereum fork choise rule
+
+this rule says that choose the chain that has the most recent validator votes behind it. mean the chain with the most voting weights. 
+
+let's consider three slot condition.
+
+1. slot 1
+  - One validator is chosen as proposer.
+  - It creates Block 1.
+  - Committee A (a group of validators assigned to Slot 1) votes.
+  - 2 validators vote.
+  - 1 validator is offline → no vote.
+
+  Block 1 has 2 votes behind it.
+  
+  Here it is not mandatory for all validators in committee to vote
+  
+2. slot 2
+  - A new proposer creates Block 2.
+  - Most validators see Block 2.
+  - BUT one validator in Committee B does NOT see it (network delay). there is possible network delay
+    
+  That validator only knows about Block 1. It votes for the latest block it knows (block 1). That vote is called an LMD GHOST vote.
+  
+  Why does it vote for block 1?
+  - Because the validator are required to vote for what they beleive is the head of the chain
+  
+  Here Ethereum assums:
+  - Network delays happen
+  - Honest validators vote based on local view
+
+3. slot 3
+  - Now Committee C runs the fork choice rule.
+  - they check How much validator weight supports Block 1? and how much in block 2?
+  Even though one validator voted for Block 1 in Slot 2,
+  Block 2 probably has more total weight.
+  So everyone in Committee C independently chooses the same head.
+  
+  here the rule is deterministic
+  
+  # Beacon chain checkpoints
+  
+  A checkpoint is a first block in the first slot of an epoch. if there is not such block, then the checkpoint is the preceding most recent block. there is always one checkpoint block per epoch, and a block can be checkpoint for multiple epoch.
+  a checkpoint block is also called as EBB(epoch Boundry Block)
+  
+  when casting a LMD Ghost rule, a validator also votes for the checkpoint block in current epoch. called target. and this vote is called FFG vote and also includes the prior checkpoint. called the source. 
+  
+  ## super majority
+  
+  A vote tat made by 2/3 of the total balance of all active validators, is seemed a supermajority. suppose there are three active validators: two have a balance of 8 ETH, and a sole validator with a balance of 32 ETH.  The supermajority vote must contain the vote of the sole validator: although the other two validators may vote differently to the sole validator, they do not have enough balance to form the supermajority.
