@@ -211,8 +211,32 @@ let's consider three slot condition.
   A checkpoint is a first block in the first slot of an epoch. if there is not such block, then the checkpoint is the preceding most recent block. there is always one checkpoint block per epoch, and a block can be checkpoint for multiple epoch.
   a checkpoint block is also called as EBB(epoch Boundry Block)
   
-  when casting a LMD Ghost rule, a validator also votes for the checkpoint block in current epoch. called target. and this vote is called FFG vote and also includes the prior checkpoint. called the source. 
+  for example if all slots have a block:
+  
+  Slot 0 → Checkpoint
+  
+  Slot 32 → Checkpoint
+  
+  Slot 64 → Checkpoint
+  
+  Slot 96 → Checkpoint
+  
+  note here when casting a LMD Ghost rule, a validator also votes for the checkpoint block in current epoch. called target. and this vote is called FFG vote and also includes the prior checkpoint. called the source. 
   
   ## super majority
   
   A vote tat made by 2/3 of the total balance of all active validators, is seemed a supermajority. suppose there are three active validators: two have a balance of 8 ETH, and a sole validator with a balance of 32 ETH.  The supermajority vote must contain the vote of the sole validator: although the other two validators may vote differently to the sole validator, they do not have enough balance to form the supermajority.
+  
+  # Finality
+  
+  Finality tells how Ethereum finalizes blocks using Casper FFG (Friendly Finality Gadget).
+  
+  we know about the slots, epoch and checkpoints from above discussion. Finality works at the checkpoint level, not individual blocks.
+  
+  at the end of every epoch validator votes for:
+  1. A source checkpoint
+  2. A target checkpoint
+  
+  If a checkpoint gets ≥ 2/3 of total validator stake voting for it. it becomes justified.
+  
+  Now this is very important to understand. if checkpoint B is justified and the checkpoint in the immidiate next epoch is also justified then the checkpoint B will be finalized. that means the finality requires two consiqutive justified checkpoints means it will take two epoch to finalize the checkpoint. 
