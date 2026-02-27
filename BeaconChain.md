@@ -225,7 +225,7 @@ let's consider three slot condition.
   
   ## super majority
   
-  A vote tat made by 2/3 of the total balance of all active validators, is seemed a supermajority. suppose there are three active validators: two have a balance of 8 ETH, and a sole validator with a balance of 32 ETH.  The supermajority vote must contain the vote of the sole validator: although the other two validators may vote differently to the sole validator, they do not have enough balance to form the supermajority.
+  A vote that made by 2/3 of the total balance of all active validators, is seemed a supermajority. suppose there are three active validators: two have a balance of 8 ETH, and a sole validator with a balance of 32 ETH.  The supermajority vote must contain the vote of the sole validator: although the other two validators may vote differently to the sole validator, they do not have enough balance to form the supermajority.
   
   # Finality
   
