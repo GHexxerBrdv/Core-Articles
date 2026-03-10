@@ -173,3 +173,81 @@ TIMESTAMP -> Get the block's timestamp
 NUMBER -> Get the block's number
 PREVRANDAO -> Get the previous block's RANDAO mix. This opcode replaces the DIFFICULTY one since The Merge hard fork.
 GASLIMIT -> Get the block's gas limit
+
+
+# Ethereum as state machine
+
+Ethereum is transaction based state machine. 
+
+it works like following:
+
+> current_state + transaction → new_state
+
+Every transaction changes the global state. as EVM computes the all the transacations. the job of the EVM is as following:
+
+> take the current state → execute transaction → produce the next state
+
+Ethereum maintains a word state. Think of it as a database that stores the account informations.
+The word state is mapping of address to the account state.
+
+> account address -> account state
+
+in ethereum each account has address of 160 bits (20 bytes). this account address can be EOA or smart contract address. Each account address has a corresponding account state.
+
+Here is an minimal info about what each account state contains:
+
+```
+AccountState [
+    nonce -> this depends on account type (EOA or contract)
+          -> for EOA, it means the number of transactions sent
+          -> for contract account it means the number of contract created
+    balance -> the amount of ETH owned in wei
+    code -> Only contract account normally has code
+    storage -> only the smart contract account has storage
+            -> this is permement
+            -> stored on-chain
+            -> expensive
+]
+```
+
+> EOA does not have code and storage, that is why those fields will be empty for EOA accounts. However after the pectra fork this has been changed. by introducing EIP7702. in this EIP the EOA can now behave as smart contract account ny deligate execution to a contract.
+
+## How this works?
+
+now in account state, instead of code being epmty.
+
+> code -> delegation marker
+
+delegation marker has specific formate such as `0xef0100 || contract_address`, The EOA will delegate execution to the `contract_address`.
+
+> Here the `0xef` is used because it is not allowed in contract bytecode according to EIP3541. so this marker can not be confused with real code.
+
+### What happens when an EOA delegates execution?
+
+When someone calls the EOA:
+- EVM sees delegation marker
+- It loads code from target contract
+- It executes it in the EOA context
+
+meaning: 
+
+```
+msg.sender = EOA
+storage = EOA storage
+balance = EOA balance
+```
+but
+
+```
+code = contract code
+```
+This is similar to delegatecall semantics.
+
+Here two opcodes comes in picture. 
+
+1. EXTCODESIZE(eoa) -> This will return 23 bytes (the delegation marker)
+2. CODESIZE -> This will return the size of delegated contract
+
+Now there is a risk related to storage.
+
+delegated EOA can use the storage. if we change the delegated contract the storage layout could break. So the recommended standard uses namespace storage which prevent collision. which is `EIP7201`
