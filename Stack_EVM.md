@@ -1,4 +1,4 @@
-# Understand the Stack a component of EVM.
+# Understand the Stack - a component of EVM.
 
 stack is very basic and simple data structure used in EVM to perform certain operations. Stack works on Last In First Out (LIFO) principal. that means the last element added to the stack is the first one to be removed.
 
