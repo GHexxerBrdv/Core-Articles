@@ -251,3 +251,46 @@ Here two opcodes comes in picture.
 Now there is a risk related to storage.
 
 delegated EOA can use the storage. if we change the delegated contract the storage layout could break. So the recommended standard uses namespace storage which prevent collision. which is `EIP7201`
+
+### How EVM starts the execution?
+
+when transaction call a contract. the EVM instance is created. After that, things happens in order as following. 
+
+- Load contract bytecode -> `ROM <- bytecode`
+- initialize the program counter -> `PC = 0`
+- load storage -> storage = `contract storage`
+- initialize memory -> `memory = 0`
+- loads environment variables -> `msg.sender, msg.value, block.number, block.timestamp`.
+- set gas supply -> usually gas comes from transaction gas limit.
+
+Now what happens when gas runs out?
+
+if has runs out, the execution stops immediately. the state changes do not apply.
+
+But even if state has not been changed, following things will be changed.
+
+- sender nonce
+- sender pays gas fees
+
+Now this all happens in the sendbox model.
+
+### EVM executing in sendbox model
+
+every time EVM executes transaction, it executes in sendbox copy of state.
+
+Think of it as:
+
+```
+real world state -> sandbox state copy -> execute contract -> success ? commit : discard
+```
+
+so if execution fails sendbox will be destoyed. during execution all the state changes has been done in sendbox copy of state. After finalizing the tx and state update the sendbox will be copied in the actual state. This is how EVM works internally.
+
+Now there is a catch. What if there are recursive calls in one tx? means some smart contract calls itself or another smart contract. 
+
+```
+User -> Uniswap Router -> Uniswap Pool -> ERC20 Token
+```
+
+in this case, each call creates new EVM instance. each instance has it's own stack, memory and gas allocation. However we have to forward gas between contracts. Suppose contract A calls contract B. in that can we have to check `gas_b <= gas_remainint_a`. if the inner call fails then called contract state changes will be discarded and caller contract has to handle the error or revert.
+
