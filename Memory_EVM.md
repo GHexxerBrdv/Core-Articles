@@ -35,4 +35,14 @@ Here the key will become 0x00 to 0x1F.
 
 While accessing memory we can read or write to any address. if we want to read some specific byte then we can not read that directly. instead we need to load full 32 bytes from memory and then extract the specific byte we want.
 
+we can assume the memory layout as folllowing from above perspective.
+
+```
+EVM MEMORY:
+
+[ 32 byte word ][ 32 byte word ][ 32 byte word ]
+      0x00           0x20           0x40
+
+```
+
 This is how the memory works in EVM.
