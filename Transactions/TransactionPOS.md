@@ -1,6 +1,6 @@
-## Overview
+## Transaction Execution in Ethereum Proof-of-Stake (PoS)
 
-This document explains **end-to-end how a transaction gets executed and finalized in Ethereum Proof-of-Stake (PoS)**.
+This article explains **end-to-end how a transaction gets executed and finalized in Ethereum Proof-of-Stake (PoS)**.
 
 Ethereum today operates as a PoS blockchain after “The Merge”, where:
 
