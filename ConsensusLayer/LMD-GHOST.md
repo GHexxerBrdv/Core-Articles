@@ -69,3 +69,37 @@ We know that we assign each block and branch a score. to assign the score we hav
 ## GHOST
 
 GHOST is the key aspect of the fork choise rule. the head block is the block which has no further descendants that is part of the fork with the highest vote.
+
+As name suggests, GHOST (Greediest Heaviest Observed Subtree), this rule will always choose the heaviest vote for the head block and to approach a head block. We will see below what it means.
+
+Before when there was POW, the LMD GHOST rule always start from the initial block of the chain to determine the head block. which means we have to always go to genesis block to find the head block. Now with PoS, the LMD GHOST rule starts from the latest checkpoint which is updated periodically. However the checkpoint is not the discussion of this article. we will see it further. 
+
+We will take a small example to determine the wroking of the rule. Coonsider the following chain:
+
+```
+                                                             
+Block A'(4) <-------- Block A (4) <--------------- Block B (1) <--------------- Block C (2)
+                              \                                  
+                                \                                
+                                  \                              
+                                    Block D (3) <--------------- Block E (1)
+```
+
+suppose we are validator who is selected to cast attesation or to create block. Now let's consider we have received other validators votes for the head of the chain, which also runs the LMD GHOST rule. As you can see above we have votes for each block, which is determine by the score when the validators has assigned the votes to each. the block vote is sum of all the votes for that block. also note that as we discussed above we will consider the latest attestation for each validator. so we can prevent double count.
+
+Here now we have to run LMD GHOST rule to cast attestation of to create a block. at this time the rule will run in two steps.
+
+1. first it will assign a score to each branch of the chain from initial block which is Block A' here. the score will be assigned based of the rule we have discussed earlier above.
+So chain become something like this
+
+```
+                (11)                      (3)                           (2)
+Block A'(4) <-------- Block A (4) <--------------- Block B (1) <--------------- Block C (2)
+                              \                                  
+                                \  (4)                              
+                                  \                   (1)           
+                                    Block D (3) <--------------- Block E (1)
+
+```
+
+2. Now we start from the initial block and according to GHOST rule, we will greedily choose the branch with the highest score. In this case, the branch with score `11` -> `4` -> `1` will be chosen and the head block will be Block E.
