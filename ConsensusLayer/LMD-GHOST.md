@@ -103,3 +103,45 @@ Block A'(4) <-------- Block A (4) <--------------- Block B (1) <--------------- 
 ```
 
 2. Now we start from the initial block and according to GHOST rule, we will greedily choose the branch with the highest score. In this case, the branch with score `11` -> `4` -> `1` will be chosen and the head block will be Block E.
+
+# Incentives
+
+LMD GHOST rule has introduced the incentive for the validators who performs correctly by choosing the branch with the highest score. However it also punish them if they act maliciously. In POS there are two responsibality of the validator. 
+
+1. proposing a bloock.
+2. creating attestations
+
+if validator acts good and runs LMD GHOST rule correctly then they will be incentivised. This incentive scheme is designed to reward the validators to secure the network from malicious actors. Now if some validator acts maliciously then their staked ETH will be slashed (burned). As we know to become a validator or to get incluaded into validator list we have to stack minimum of 32 ETH. This stake is deposit to tell the network that the validator will act coorrecly while participating, and this deposits can be burned if the validator acts maliciously. as of now we won't go deeper into slashing mechanisms.
+
+Now we will see those two responsibilities of the validator.
+
+## Proposing a Block
+
+When a validator is selected to propose a block. they must create only one block on top of the head. in rewards they will get priority fees of  all the transaction they include in the block and some additional amount of ETH minted to them. See below diagram for more understanding
+
+```
+------------------------
+|      tx1             | -----------> fees |
+|      tx2             | -----------> fees |
+|      tx3             | -----------> fees |
+|      ...             | -----------> fees |
+|      ...             | -----------> fees |
+|      txN             | -----------> fees |
+|      (Block)         |                   |
+------------------------                   |
+                                           |
+ETH amount -------------------------------- + ------> validator
+
+```
+
+If they act maliciously and create two blocks instead of one, they will be penalized by the network according to the slashing rules.
+
+> This is the interesting part. In Bitcoin there is no such concept of slashing. However in POW if a miner creates two blocks then they will eventually spending more resources and money. and at the end only one block will be accepted by the network. That means building two blocks in POW is allowed but there is no profit for miners. and it is useless if they create two blocks. That is why there is no such slashing in POW.
+
+## Creating Attestations
+
+When a validator selected to vote on their view of the network in form of attestations, they must cast only one attestation.by doing that they earn some small fee which is much smaller then the block building. If the validator tries to cheat by creating more than a single attestation or contradictory attestations, the protocol explicitly punishes them by slashing a proportion of their stake. 
+
+
+If the validator keeps behaving maliciously for quite a long time, the protocol has the power of force-ejecting them from the validator set.
+
