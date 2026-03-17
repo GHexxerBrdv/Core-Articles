@@ -1,4 +1,4 @@
-# LMD GHOST rule in consensus mechanism od ethereum pos
+# LMD GHOST rule in consensus mechanism of ethereum pos
 
 LMD GHOST rule is main part of ethereum pos consensus mechanism. it is the fork choise rule algorithem. it is used to select the latest block a validator/node should consider valid in their local view of blockchain. this block is also called the `head` of the chain.
 
