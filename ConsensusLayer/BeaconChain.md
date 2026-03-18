@@ -275,7 +275,7 @@
   
   ---
   
-  # 1️⃣2️⃣ Finality (Casper FFG)
+  # Finality (Casper FFG)
   
   Finality ensures blocks cannot be reverted.
   
