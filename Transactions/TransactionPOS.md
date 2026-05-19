@@ -61,8 +61,8 @@ Ethereum uses the EIP-1559 fee structure.
 Total Fee = Gas Used × (Base Fee + Priority Fee)
 ```
 
-Base fee → 🔥 Burned
-Tip → 💰 Validator reward
+Base fee → Burned
+Tip → Validator reward
 
 ---
 
@@ -271,7 +271,7 @@ Finality typically occurs after **2 epochs (~13 minutes)**.
 
 ---
 
-# 🧠 Complete Flow Summary
+# Complete Flow Summary
 
 1. User signs transaction
 2. Sent to execution client
@@ -285,7 +285,7 @@ Finality typically occurs after **2 epochs (~13 minutes)**.
 
 ---
 
-# 🏛 Architecture Insight
+# Architecture Insight
 
 Post-Merge Ethereum separates:
 
